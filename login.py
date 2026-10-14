@@ -18,4 +18,3 @@ while intentos > 0:
         print("Intentos restantes:", intentos)
 if intentos == 0:
     print("Acceso bloqueado. Intente nuevamente más tarde.")
-    print("yo estube aqui")
