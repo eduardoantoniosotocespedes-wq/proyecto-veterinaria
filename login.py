@@ -18,4 +18,4 @@ while intentos > 0:
         print("Intentos restantes:", intentos)
 if intentos == 0:
     print("Acceso bloqueado. Intente nuevamente más tarde.")
-    print("yo estube aqui")
+    print("tengo pelos en los pesones, lo digo yo carolina, esta es la rama carolina por ende yo carolina tengo pelos en los pesones XD")
