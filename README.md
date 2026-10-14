@@ -12,4 +12,4 @@
 
 ## Tecnologías Utilizadas
 
-* **Lenguaje:** [ Python 
+* **Lenguaje:** [ Python ]
