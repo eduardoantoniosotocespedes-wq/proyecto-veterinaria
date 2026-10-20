@@ -73,7 +73,7 @@ def registrar_dueño():
 def ver_dueños():
     print("\n--- LISTA DE DUEÑOS ---")
     if not database["dueños"]:
-        print("📭 No hay dueños registrados.")
+        print("No hay dueños registrados.")
         return
     
     for d in database["dueños"]:
