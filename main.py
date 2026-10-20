@@ -31,3 +31,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+#prueba para ver si mi terminal tiene algo malo
