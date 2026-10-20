@@ -296,3 +296,134 @@ def eliminar_veterinario():
         print("ID no encontrado.")
     except ValueError:
         print("Ingrese un número válido.")
+
+def crear_cita():
+    print("\n--- CREAR NUEVA CITA ---")
+    if not database["mascotas"]:
+        print(" No hay mascotas registradas. Debe registrar una mascota primero.")
+        return
+    if not database["veterinarios"]:
+        print(" No hay veterinarios registrados. Debe registrar un veterinario primero.")
+        return
+    try:
+        id_mascota = int(input("ID de la mascota: "))
+        mascota_encontrada = next((m for m in database["mascotas"] if m["id"] == id_mascota), None)
+        if not mascota_encontrada:
+            print(" Error: No existe ninguna mascota registrada con ese ID.")
+            return
+        id_veterinario = int(input("ID del veterinario: "))
+        vet_encontrado = next((v for v in database["veterinarios"] if v["id"] == id_veterinario), None)
+        if not vet_encontrado:
+            print(" Error: No existe ningún veterinario registrado con ese ID.")
+            return
+        fecha = input("Fecha de la cita (ej. DD/MM/AAAA): ")
+        hora = input("Hora de la cita (ej. 10:30 AM): ")
+        motivo = input("Motivo de la consulta: ")
+        id_cita = len(database["citas"]) + 1
+        database["citas"].append({
+            "id": id_cita,
+            "id_mascota": id_mascota,
+            "id_veterinario": id_veterinario,
+            "fecha": fecha,
+            "hora": hora,
+            "motivo": motivo
+        })
+        print(f" Cita #{id_cita} agendada con éxito para '{mascota_encontrada['nombre']}' con Dr/a. {vet_encontrado['nombre']} {vet_encontrado['apellido']}.")
+    except ValueError:
+        print(" Ingrese un número válido para los IDs.")
+
+def ver_citas():
+    print("\n--- LISTA DE CITAS PROGRAMADAS ---")
+    if not database["citas"]:
+        print("No hay citas programadas.")
+        return
+
+    for c in database["citas"]:
+        mascota = next((m for m in database["mascotas"] if m["id"] == c["id_mascota"]), None)
+        nombre_mascota = mascota["nombre"] if mascota else "Desconocida"
+
+        vet = next((v for v in database["veterinarios"] if v["id"] == c["id_veterinario"]), None)
+        nombre_vet = f"Dr/a. {vet['nombre']} {vet['apellido']}" if vet else "Desconocido"
+
+        print(f"ID Cita: {c['id']} | Fecha: {c['fecha']} - {c['hora']} | Mascota: {nombre_mascota} (ID: {c['id_mascota']}) | Atiende: {nombre_vet} (ID: {c['id_veterinario']}) | Motivo: {c['motivo']}")
+
+def modificar_cita():
+    ver_citas()
+    if not database["citas"]: return
+    try:
+        id_buscar = int(input("\nID de la cita a modificar: "))
+        for c in database["citas"]:
+            if c["id"] == id_buscar:
+                print(f"Modificando Cita #{c['id']}. Deje en blanco para mantener el dato actual:")
+                nueva_fecha = input(f"Nueva fecha [{c['fecha']}]: ")
+                nueva_hora = input(f"Nueva hora [{c['hora']}]: ")
+                nuevo_motivo = input(f"Nuevo motivo [{c['motivo']}]: ")
+                if nueva_fecha: c["fecha"] = nueva_fecha
+                if nueva_hora: c["hora"] = nueva_hora
+                if nuevo_motivo: c["motivo"] = nuevo_motivo
+                print(" Cita modificada correctamente.")
+                return
+        print(" ID de cita no encontrado.")
+    except ValueError:
+        print("Ingrese un número válido.")
+
+def cancelar_cita():
+    ver_citas()
+    if not database["citas"]: return
+    try:
+        id_buscar = int(input("\nID de la cita a cancelar: "))
+        for c in database["citas"]:
+            if c["id"] == id_buscar:
+                database["citas"].remove(c)
+                print("Cita cancelada y eliminada correctamente.")
+                return
+        print(" ID de cita no encontrado.")
+    except ValueError:
+        print(" Ingrese un número válido.")
+
+def registrar_tratamiento():
+    print("\n--- REGISTRAR TRATAMIENTO MÉDICO ---")
+    if not database["mascotas"]:
+        print(" No hay mascotas registradas en la base de datos.")
+        return
+    try:
+        id_mascota = int(input("ID de la mascota que recibe el tratamiento: "))
+        mascota_encontrada = next((m for m in database["mascotas"] if m["id"] == id_mascota), None)
+        if not mascota_encontrada:
+            print(" Error: No existe ninguna mascota registrada con ese ID.")
+            return
+        descripcion = input("Descripción del caso / diagnóstico: ")
+        medicamento = input("Medicamento recetado y dosis: ")
+        fecha = input("Fecha del tratamiento (ej. DD/MM/AAAA): ")
+        id_tratamiento = len(database["tratamientos"]) + 1
+        database["tratamientos"].append({
+            "id": id_tratamiento,
+            "id_mascota": id_mascota,
+            "descripcion": descripcion,
+            "medicamento": medicamento,
+            "fecha": fecha
+        })
+        print(f"Tratamiento registrado con éxito para la mascota '{mascota_encontrada['nombre']}'.")
+    except ValueError:
+        print(" Ingrese un número válido para el ID de la mascota.")
+def ver_tratamientos_mascota():
+    print("\n--- CONSULTAR HISTORIAL MÉDICO ---")
+    if not database["mascotas"]:
+        print("No hay mascotas registradas.")
+        return
+    try:
+        id_mascota = int(input("Ingrese el ID de la mascota a consultar: "))
+        mascota = next((m for m in database["mascotas"] if m["id"] == id_mascota), None)
+        if not mascota:
+            print(" Error: No existe ninguna mascota registrada con ese ID.")
+            return
+        print(f"\nHistorial Médico de: {mascota['nombre']} ({mascota['especie']} - {mascota['raza']})")
+        print("-" * 55)
+        tratamientos = [t for t in database["tratamientos"] if t["id_mascota"] == id_mascota]
+        if not tratamientos:
+            print("No hay tratamientos registrados para esta mascota.")
+            return
+        for t in tratamientos:
+            print(f"Fecha: {t['fecha']} | Diagnóstico: {t['descripcion']} | Medicamento: {t['medicamento']}")
+    except ValueError:
+        print(" Ingrese un número válido.")
