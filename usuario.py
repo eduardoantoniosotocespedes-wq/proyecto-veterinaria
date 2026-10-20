@@ -1,10 +1,11 @@
+from mascotas import ejecutar_menu_mascotas
 def ejecutar_menu_usuarios():
     while True:
         print("\n==============================")
         print("  MENÚ DE USUARIOS ")
         print("==============================")
         print("1. Ver Dueños registrados (Modo lectura)")
-        print("2. [Espacio para que Persona 2 y 3 agreguen funciones de Mascotas/Citas]")
+        print("2. Menu para servico de mascotas")
         print("3. Cerrar sesión (Volver al menú principal)")
         
         opcion = input("Elige una opción: ")
@@ -14,7 +15,7 @@ def ejecutar_menu_usuarios():
                 from funciones import ver_dueños
                 ver_dueños()
             case "2":
-                print("Funciones en desarrollo por mis compañeras...")
+                ejecutar_menu_mascotas()
             case "3":
                 print("Cerrando sesión de usuario...")
                 break
