@@ -1,33 +1,29 @@
-def administrator():
-    while True:
-        print("""
-============= MENU DE ADMINISTRADOR ==============
-1.-Registrar usuario
-2.-Mostrar usuarios
-3.-Buscar usuario
-4.-Modificar usuario
-5.-Eliminar usuario
-6.-Cerrar sesión
-""")
-        option = input("Responda aqui: ")
-        if option.isdigit():
-            option = int(option)
-            match option:
-                case 1:
-                    print("register_user()")
-                case 2:
-                    print("show_user()")
-                case 3:
-                    print("search_user()")
-                case 4:
-                    print("modify_user()")
-                case 5:
-                    print("delete_user()")
-                case 6:
-                    print("===Saliendo...")
-                    break
-                case _:
-                    print("xd")
-        else:
-            print("opcion no reconocida")
+from funciones import registrar_dueño, ver_dueños, editar_dueño, eliminar_dueño
 
+def ejecutar_menu_administradores():
+    while True:
+        print("\n==============================")
+        print(" MENÚ DE ADMINISTRADORES ")
+        print("==============================")
+        print("1. Registrar Dueño")
+        print("2. Ver Dueños")
+        print("3. Editar Dueño")
+        print("4. Eliminar Dueño")
+        print("5. Cerrar sesión (Volver al menú principal)")
+        
+        opcion = input("Elige una opción: ")
+        
+        match opcion:
+            case "1":
+                registrar_dueño()
+            case "2":
+                ver_dueños()
+            case "3":
+                editar_dueño()
+            case "4":
+                eliminar_dueño()
+            case "5":
+                print("Cerrando sesión de administrador...")
+                break
+            case _:
+                print("Opción inválida. Intenta de nuevo.")
