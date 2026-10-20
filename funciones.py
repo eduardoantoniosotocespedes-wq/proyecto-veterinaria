@@ -73,7 +73,7 @@ def registrar_dueño():
 def ver_dueños():
     print("\n--- LISTA DE DUEÑOS ---")
     if not database["dueños"]:
-        print("📭 No hay dueños registrados.")
+        print("No hay dueños registrados.")
         return
     
     for d in database["dueños"]:
@@ -117,6 +117,181 @@ def eliminar_dueño():
             if d["id"] == id_buscar:
                 database["dueños"].remove(d)
                 print("Dueño eliminado.")
+                return
+        print("ID no encontrado.")
+    except ValueError:
+        print("Ingrese un número válido.")
+
+# MÓDULO DE MASCOTAS
+
+def registrar_mascota():
+    print("\n--- REGISTRAR NUEVA MASCOTA ---")
+    if not database["dueños"]:
+        print("No hay dueños registrados. Debe registrar un dueño primero.")
+        return
+
+    try:
+        id_dueño = int(input("ID del dueño: "))
+        dueño_encontrado = None
+        for d in database["dueños"]:
+            if d["id"] == id_dueño:
+                dueño_encontrado = d
+                break
+        
+        if not dueño_encontrado:
+            print(" Error: No existe ningún dueño registrado con ese ID.")
+            return
+
+        nombre = input("Nombre de la mascota: ")
+        especie = input("Especie (ej. Perro, Gato): ")
+        raza = input("Raza: ")
+        edad = input("Edad: ")
+        sexo = input("Sexo (M/F): ")
+
+        id_mascota = len(database["mascotas"]) + 1
+
+        database["mascotas"].append({
+            "id": id_mascota,
+            "nombre": nombre,
+            "especie": especie,
+            "raza": raza,
+            "edad": edad,
+            "sexo": sexo,
+            "id_dueño": id_dueño
+        })
+        print(f" Mascota '{nombre}' registrada con éxito con ID {id_mascota} (Dueño: {dueño_encontrado['nombre']} {dueño_encontrado['apellido']}).")
+
+    except ValueError:
+        print(" Ingrese un número válido para el ID del dueño.")
+
+
+def ver_mascotas():
+    print("\n--- LISTA DE MASCOTAS ---")
+    if not database["mascotas"]:
+        print("No hay mascotas registradas.")
+        return
+
+    for m in database["mascotas"]:
+        # Buscar el nombre del dueño asociado
+        nombre_dueño = "Desconocido"
+        for d in database["dueños"]:
+            if d["id"] == m["id_dueño"]:
+                nombre_dueño = f"{d['nombre']} {d['apellido']}"
+                break
+
+        print(f"ID: {m['id']} | Nombre: {m['nombre']} | Especie: {m['especie']} | Raza: {m['raza']} | Edad: {m['edad']} | Sexo: {m['sexo']} | Dueño: {nombre_dueño} (ID: {m['id_dueño']})")
+
+
+def editar_mascota():
+    ver_mascotas()
+    if not database["mascotas"]: return
+
+    try:
+        id_buscar = int(input("\nID de la mascota a editar: "))
+        for m in database["mascotas"]:
+            if m["id"] == id_buscar:
+                print(f"Editando a '{m['nombre']}'. Deje en blanco para mantener el dato actual:")
+
+                nuevo_nombre = input(f"Nuevo nombre [{m['nombre']}]: ")
+                nueva_especie = input(f"Nueva especie [{m['especie']}]: ")
+                nueva_raza = input(f"Nueva raza [{m['raza']}]: ")
+                nueva_edad = input(f"Nueva edad [{m['edad']}]: ")
+                nuevo_sexo = input(f"Nuevo sexo [{m['sexo']}]: ")
+
+                if nuevo_nombre: m["nombre"] = nuevo_nombre
+                if nueva_especie: m["especie"] = nueva_especie
+                if nueva_raza: m["raza"] = nueva_raza
+                if nueva_edad: m["edad"] = nueva_edad
+                if nuevo_sexo: m["sexo"] = nuevo_sexo
+
+                print("Mascota actualizada correctamente.")
+                return
+
+        print("ID no encontrado.")
+    except ValueError:
+        print(" Ingrese un número válido.")
+
+
+def eliminar_mascota():
+    ver_mascotas()
+    if not database["mascotas"]: return
+
+    try:
+        id_buscar = int(input("\nID de la mascota a eliminar: "))
+        for m in database["mascotas"]:
+            if m["id"] == id_buscar:
+                database["mascotas"].remove(m)
+                print("Mascota eliminada correctamente.")
+                return
+        print("ID no encontrado.")
+    except ValueError:
+        print("Ingrese un número válido.")
+
+
+#  MÓDULO DE VETERINARIOS 
+
+def registrar_veterinario():
+    print("\n--- REGISTRAR NUEVO VETERINARIO ---")
+    id_vet = len(database["veterinarios"]) + 1
+    nombre = input("Nombre: ")
+    apellido = input("Apellido: ")
+    especialidad = input("Especialidad: ")
+    telefono = input("Teléfono: ")
+
+    database["veterinarios"].append({
+        "id": id_vet,
+        "nombre": nombre,
+        "apellido": apellido,
+        "especialidad": especialidad,
+        "telefono": telefono
+    })
+    print(f"Veterinario Dr/a. '{nombre} {apellido}' registrado con éxito con ID {id_vet}.")
+
+
+def ver_veterinarios():
+    print("\n--- LISTA DE VETERINARIOS ---")
+    if not database["veterinarios"]:
+        print("No hay veterinarios registrados.")
+        return
+
+    for v in database["veterinarios"]:
+        print(f"ID: {v['id']} | Dr/a. {v['nombre']} {v['apellido']} | Especialidad: {v['especialidad']} | Teléfono: {v['telefono']}")
+
+
+def editar_veterinario():
+    ver_veterinarios()
+    if not database["veterinarios"]: return
+
+    try:
+        id_buscar = int(input("\nID del veterinario a editar: "))
+        for v in database["veterinarios"]:
+            if v["id"] == id_buscar:
+                print(f"Editando a Dr/a. {v['nombre']} {v['apellido']}. Deje en blanco para mantener el dato actual:")
+
+                nueva_especialidad = input(f"Nueva especialidad [{v['especialidad']}]: ")
+                nuevo_telefono = input(f"Nuevo teléfono [{v['telefono']}]: ")
+
+                if nueva_especialidad: v["especialidad"] = nueva_especialidad
+                if nuevo_telefono: v["telefono"] = nuevo_telefono
+
+                print("Información de veterinario actualizada correctamente.")
+                return
+
+        print("ID no encontrado.")
+    except ValueError:
+        print("Ingrese un número válido.")
+
+
+def eliminar_veterinario():
+    ver_veterinarios()
+    if not database["veterinarios"]: return
+
+    try:
+        id_buscar = int(input("\nID del veterinario a eliminar: "))
+        for v in database["veterinarios"]:
+            if v["id"] == id_buscar:
+                database["veterinarios"].remove(v)
+                print("Veterinario eliminado correctamente.")
                 return
         print("ID no encontrado.")
     except ValueError:
