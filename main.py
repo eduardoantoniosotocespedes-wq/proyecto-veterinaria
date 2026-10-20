@@ -5,7 +5,7 @@ from usuario import ejecutar_menu_usuarios
 def main():
     while True:
         print("\n==================================")
-        print("🐾 VETCARE — SISTEMA VETERINARIO 🐾")
+        print("  VETCARE — SISTEMA VETERINARIO  ")
         print("==================================")
         print("1. Iniciar Sesión")
         print("2. Registrarse")
@@ -31,6 +31,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-#prueba para ver si mi terminal tiene algo malo
