@@ -10,6 +10,7 @@ def ejecutar_menu_administradores():
         print("3. Editar Dueño")
         print("4. Eliminar Dueño")
         print("5. Cerrar sesión (Volver al menú principal)")
+        print("==============================")
         
         opcion = input("Elige una opción: ")
         
