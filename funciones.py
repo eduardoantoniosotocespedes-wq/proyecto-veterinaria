@@ -1,14 +1,14 @@
 # Base de datos central compartida
 database = {
-    "usuarios": [],     # username, password, rol
-    "dueños": [],       # id, nombre, apellido, telefono, direccion)
+    "usuarios": [],     #base de datos creada a partir de un diccionario con listas adentro para simiular una base de datos
+    "dueños": [],       
     "mascotas": [],     
     "veterinarios": [], 
     "citas": [],        
     "tratamientos": []  
 }
 
-#LOGIN Y REGISTRO 
+#login y ingreso de ususario 
 def registrar_usuario():
     print("\n--- REGISTRO DE USUARIO ---")
     username = input("Crea un usuario: ")
@@ -49,7 +49,7 @@ def iniciar_sesion():
     return None
 
 
-# CRUD DE DUEÑOS 
+# Crud de dueños    
 def registrar_dueño():
     print("\n--- REGISTRAR NUEVO DUEÑO ---")
     nombre = input("Nombre: ")
@@ -122,7 +122,7 @@ def eliminar_dueño():
     except ValueError:
         print("Ingrese un número válido.")
 
-# MÓDULO DE MASCOTAS
+# modulo de mascotas
 
 def registrar_mascota():
     print("\n--- REGISTRAR NUEVA MASCOTA ---")
@@ -228,7 +228,7 @@ def eliminar_mascota():
         print("Ingrese un número válido.")
 
 
-#  MÓDULO DE VETERINARIOS 
+#  modulo de veterinaria
 
 def registrar_veterinario():
     print("\n--- REGISTRAR NUEVO VETERINARIO ---")
@@ -406,6 +406,7 @@ def registrar_tratamiento():
         print(f"Tratamiento registrado con éxito para la mascota '{mascota_encontrada['nombre']}'.")
     except ValueError:
         print(" Ingrese un número válido para el ID de la mascota.")
+
 def ver_tratamientos_mascota():
     print("\n--- CONSULTAR HISTORIAL MÉDICO ---")
     if not database["mascotas"]:

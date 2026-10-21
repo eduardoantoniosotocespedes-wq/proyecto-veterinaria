@@ -5,7 +5,7 @@ def ejecutar_menu_usuarios():
         print("  MENÚ DE USUARIOS ")
         print("==============================")
         print("1. Ver Dueños registrados (Modo lectura)")
-        print("2. Menu para servico de mascotas")
+        print("2. Menu para servicios de mascotas")
         print("3. Cerrar sesión (Volver al menú principal)")
         
         opcion = input("Elige una opción: ")
