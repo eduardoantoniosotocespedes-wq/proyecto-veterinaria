@@ -1,19 +1,89 @@
-# Base de datos central compartida
 database = {
-    "usuarios": [],     #base de datos creada a partir de un diccionario con listas adentro para simiular una base de datos
-    "dueños": [],       
+    "usuarios": [],     
+    "dueños": [{"dueño": "eduardo", "contraseña": "12345"} ],      
     "mascotas": [],     
     "veterinarios": [], 
     "citas": [],        
     "tratamientos": []  
 }
 
-#login y ingreso de ususario 
+def dueños():
+    while True:
+        print("""
+======== MENU DE DUEÑO =========
+1.- Registrar clientes
+2.- Registrar administradores
+4.- Registrar veterinarios
+5.- Registrar mascotas
+6.- Cerrar sesión
+    """)
+        option = str(input("Responda aqui: "))
+        match option:
+            case "1":
+                # registrar_dueño()
+                pass
+            case "2":
+                # registrar_administrador()
+                pass
+            case "3":
+                pass
+            case "4":
+                pass
+            case "5":
+                pass
+            case "6":
+                print("Cerrando sesión...")
+                break  # Rompe el while para salir al login principal
+            case _:
+                print("Opcion invalida, intente denuevo.")
+                print(" ")       
+
+def verificar():
+    print("\n--- INICIO DE SESIÓN ---")
+    user = input("Ingrese su usuario: ")
+    contraseña = input("Ingrese su contraseña: ")
+    
+    # Recorre la lista de dueños buscando coincidencias en los diccionarios
+    for u in database["dueños"]:
+        if u["dueño"] == user and u["contraseña"] == contraseña:
+            print(f"¡Acceso exitoso! Bienvenido, {user}.")
+            dueños()
+            return True
+        
+    print("Error: Usuario o contraseña incorrectos.")
+    return False
+
+
+
+
+def registrar_administrador():
+    print("\n--- REGISTRO DE ADMINISTRADOR ---")
+    username = input("Crea un usuario: ")
+    
+    # Validar si el usuario ya existe en la base de datos
+    for u in database["administradores"]:
+        if u["username"] == username:
+            print("Ese nombre de usuario ya está en uso. Intenta con otro.")
+            return  # Detiene el registro y vuelve al menú
+            
+    password = input("Crea una contraseña: ")
+    
+    tipo = 1
+    
+    rol = "admin" if tipo == "1" else "usuario"
+    
+    database["administradores"].append({
+        "username": username,
+        "password": password,
+        "rol": rol
+    })
+    print(f"¡administrador registrado con éxito como!")
+
 def registrar_usuario():
     print("\n--- REGISTRO DE USUARIO ---")
     username = input("Crea un usuario: ")
     
-    # 🔍 Validar si el usuario ya existe en la base de datos
+    # Validar si el usuario ya existe en la base de datos
     for u in database["usuarios"]:
         if u["username"] == username:
             print("Ese nombre de usuario ya está en uso. Intenta con otro.")
@@ -106,21 +176,33 @@ def editar_dueño():
         print("ID no encontrado.")
     except ValueError:
         print("Ingrese un número válido.")
+        
 
 def eliminar_dueño():
     ver_dueños()
     if not database["dueños"]: return
-        
+
     try:
         id_buscar = int(input("\nID del dueño a eliminar: "))
+        encontrado = False
+        
         for d in database["dueños"]:
             if d["id"] == id_buscar:
                 database["dueños"].remove(d)
-                print("Dueño eliminado.")
-                return
-        print("ID no encontrado.")
+                encontrado = True
+                break
+        
+        if encontrado:
+            # 🔄 REINDEXAR / REASIGNAR IDs DE FORMA SECUENCIAL
+            for indice, dueño in enumerate(database["dueños"]):
+                dueño["id"] = indice + 1
+                
+            print("✅ Dueño eliminado y lista de IDs reordenada correctamente.")
+        else:
+            print("❌ ID no encontrado.")
+            
     except ValueError:
-        print("Ingrese un número válido.")
+        print("⚠️ Ingrese un número válido.")
 
 # modulo de mascotas
 
@@ -296,6 +378,7 @@ def eliminar_veterinario():
         print("ID no encontrado.")
     except ValueError:
         print("Ingrese un número válido.")
+
 
 def crear_cita():
     print("\n--- CREAR NUEVA CITA ---")
