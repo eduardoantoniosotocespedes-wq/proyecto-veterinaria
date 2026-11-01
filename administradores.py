@@ -40,7 +40,6 @@ def ejecutar_menu_super_admin():
 2.- Ver Dueños
 3.- Editar Dueño
 4.- Eliminar Dueño
-
 ===== Gestion de dueños ====== 
 5.- Registrar Administrador
 6.- Ver Administradores
