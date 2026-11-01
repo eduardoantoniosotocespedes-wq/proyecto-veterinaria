@@ -1,5 +1,6 @@
 from base_de_datos import database
-from administradores import ejecutar_menu_super_admin
+from administradores import ejecutar_menu_super_admin, ejecutar_menu_administradores
+from cliente import ejecutar_menu_clientes
 #creando el ligin de main(), esta funcion la llamare en la parte de main.py
 def main():
     while True:
@@ -20,10 +21,10 @@ INICIAR SESIÓN""")
                     ejecutar_menu_super_admin()
     
             elif user_found["rol"] == "admin":
-                    pass#administradires con acceso a todo menos a crear administradires
+                    ejecutar_menu_administradores()
     
             elif user_found["rol"] == "cliente":
-                    pass#el clientes solo tendra acceso a poder ver sus servicios
+                    ejecutar_menu_clientes()
             else:
                 print("error de roll, usuario agregado de manera incorrecta comunicarse con dios")
         else:

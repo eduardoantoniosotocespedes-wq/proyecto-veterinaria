@@ -1,5 +1,5 @@
 from mascotas import ejecutar_menu_mascotas
-def ejecutar_menu_usuarios():
+def ejecutar_menu_clientes():
     while True:
         print("\n==============================")
         print("  MENÚ DE USUARIOS ")
