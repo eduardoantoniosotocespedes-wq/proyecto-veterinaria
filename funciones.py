@@ -7,7 +7,7 @@ def registrar_dueño():
     apellido = input("Apellido: ")
     telefono = input("Teléfono: ")
     direccion = input("Dirección: ")
-    pas = input("cree una contraseña")
+    pas = input("cree una contraseña: ")
     dueño = {"user_name": nombre,"apellido": apellido,"telefono": telefono,"direccion": direccion,"password":pas,"rol":"cliente"}
     
     database["usuarios"].append(dueño)
@@ -31,11 +31,12 @@ def editar_dueño():
         print(f"{i}. {a['user_name']}")
     
     elegido = cliente[int(input("¿Cuál? "))-1]
+    print("Si no quiere editar un dato, dejelo en blanco")
     elegido["user_name"] = input(f"Nuevo nombre ({elegido["user_name"]}): ") or elegido["user_name"]
     elegido["apellido"] = input(f"Nuevo apellido ({elegido["apellido"]}): ") or elegido["apellido"]
     elegido["telefono"] = input(f"Nuevo telefono ({elegido["telefono"]}): ") or elegido["telefono"]
     elegido["direccion"] = input(f"Nueva direccion ({elegido["direccion"]}): ") or elegido["direccion"]
-    elegido["password"] = input("Nueva pass: ") or elegido["password"]
+    elegido["password"] = input("Nueva contraseña: ") or elegido["password"]
     print("Editado con exito.")
 
 def eliminar_dueño():
