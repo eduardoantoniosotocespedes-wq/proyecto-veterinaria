@@ -1,4 +1,4 @@
-from funciones import registrar_dueño, ver_dueños, editar_dueño, eliminar_dueño
+from funciones import registrar_dueño, ver_dueños, editar_dueño, eliminar_dueño,registrar_administrador, ver_administrador, editar_administrador, eliminar_administrador
 #menu para administradires, solo con acceso solo administradores
 def ejecutar_menu_administradores():
     while True:
@@ -43,9 +43,9 @@ def ejecutar_menu_super_admin():
 = Gestion de administradores = 
 5.- Registrar Administrador
 6.- Ver Administradores
-7.- Editar editar administrador
+7.- Editar Administrador
 8.- Eliminar Administrador
-9.- Cerrar sesión 
+9.- Cerrar Sesión 
 ==============================""")
         
         opcion = input("Elige una opción: ")
@@ -60,15 +60,14 @@ def ejecutar_menu_super_admin():
             case "4":
                 eliminar_dueño()
             case "5":
-                pass
+                registrar_administrador()
             case "6":
-                pass
+                ver_administrador()
             case "7":
-                pass
+                editar_administrador()
             case "8":
-                pass
+                eliminar_administrador()
             case "9":
-                pass 
                 print("Cerrando sesión de administrador...")
                 break
             case _:

@@ -1,186 +1,121 @@
 from base_de_datos import database
 
-def dueños():
-    while True:
-        print("""
-======== MENU DE DUEÑO =========
-1.- Registrar clientes
-2.- Registrar administradores
-4.- Registrar veterinarios
-5.- Registrar mascotas
-6.- Cerrar sesión
-    """)
-        option = str(input("Responda aqui: "))
-        match option:
-            case "1":
-                # registrar_dueño()
-                pass
-            case "2":
-                # registrar_administrador()
-                pass
-            case "3":
-                pass
-            case "4":
-                pass
-            case "5":
-                pass
-            case "6":
-                print("Cerrando sesión...")
-                break  # Rompe el while para salir al login principal
-            case _:
-                print("Opcion invalida, intente denuevo.")
-                print(" ")       
-
-
-def registrar_administrador():
-    print("\n--- REGISTRO DE ADMINISTRADOR ---")
-    username = input("Crea un usuario: ")
-    
-    # Validar si el usuario ya existe en la base de datos
-    for u in database["administradores"]:
-        if u["username"] == username:
-            print("Ese nombre de usuario ya está en uso. Intenta con otro.")
-            return  # Detiene el registro y vuelve al menú
-            
-    password = input("Crea una contraseña: ")
-    
-    tipo = 1
-    
-    rol = "admin" if tipo == "1" else "usuario"
-    
-    database["administradores"].append({
-        "username": username,
-        "password": password,
-        "rol": rol
-    })
-    print(f"¡administrador registrado con éxito como!")
-
-def registrar_usuario():
-    print("\n--- REGISTRO DE USUARIO ---")
-    username = input("Crea un usuario: ")
-    
-    # Validar si el usuario ya existe en la base de datos
-    for u in database["usuarios"]:
-        if u["username"] == username:
-            print("Ese nombre de usuario ya está en uso. Intenta con otro.")
-            return  # Detiene el registro y vuelve al menú
-            
-    password = input("Crea una contraseña: ")
-    
-    print("¿Qué rol tendrá este usuario?")
-    print("1. Administrador")
-    print("2. Usuario normal")
-    tipo = input("Elige (1 o 2): ")
-    
-    rol = "admin" if tipo == "1" else "usuario"
-    
-    database["usuarios"].append({
-        "username": username,
-        "password": password,
-        "rol": rol
-    })
-    print(f"¡Usuario registrado con éxito como '{rol}'!")
-
-def iniciar_sesion():
-    print("\n--- INICIO DE SESIÓN ---")
-    username = input("Usuario: ")
-    password = input("Contraseña: ")
-    
-    for u in database["usuarios"]:
-        if u["username"] == username and u["password"] == password:
-            print(f"¡Bienvenido, {username}!")
-            return u  # Retorna el diccionario del usuario incluyendo su rol
-            
-    print("Usuario o contraseña incorrectos.")
-    return None
-
-
-# Crud de dueños    
+#funciones de superadministrador y algunas de administradores 
 def registrar_dueño():
     print("\n--- REGISTRAR NUEVO DUEÑO ---")
     nombre = input("Nombre: ")
     apellido = input("Apellido: ")
     telefono = input("Teléfono: ")
     direccion = input("Dirección: ")
+    pas = input("cree una contraseña")
+    dueño = {"user_name": nombre,"apellido": apellido,"telefono": telefono,"direccion": direccion,"password":pas,"rol":"cliente"}
     
-    nuevo_id = len(database["dueños"]) + 1
-    
-    dueño = {
-        "id": nuevo_id,
-        "nombre": nombre,
-        "apellido": apellido,
-        "telefono": telefono,
-        "direccion": direccion
-    }
-    
-    database["dueños"].append(dueño)
-    print(f"Dueño registrado con el ID: {nuevo_id}")
+    database["usuarios"].append(dueño)
+    print(f"El dueño ha sido registrado con exito")
 
 def ver_dueños():
-    print("\n--- LISTA DE DUEÑOS ---")
-    if not database["dueños"]:
-        print("No hay dueños registrados.")
-        return
-    
-    for d in database["dueños"]:
-        print(f"ID: {d['id']} | Nombre: {d['nombre']} {d['apellido']} | Tel: {d['telefono']} | Dir: {d['direccion']}")
+    print("\n=== Lista de dueños ===")
+    dueños = [u for u in database["usuarios"]if u["rol"]== "cliente" ]
+    if not dueños:
+        print("No hay dueños registrados")
+    for d in dueños:
+        print(f"| Nombre: {d["user_name"]} {d["apellido"]} | Tel: {d["telefono"]} | Dir: {d["direccion"]}")
 
 def editar_dueño():
-    ver_dueños()
-    if not database["dueños"]: return
-        
-    try:
-        id_buscar = int(input("\nID del dueño a editar: "))
-        for d in database["dueños"]:
-            if d["id"] == id_buscar:
-                print(f"Editando a {d['nombre']} {d['apellido']}. Deje en blanco para no cambiar el dato:")
-                
-                nuevo_nombre = input(f"Nuevo nombre [{d['nombre']}]: ")
-                nuevo_apellido = input(f"Nuevo apellido [{d['apellido']}]: ")
-                nuevo_telefono = input(f"Nuevo teléfono [{d['telefono']}]: ")
-                nueva_direccion = input(f"Nueva dirección [{d['direccion']}]: ")
-                
-                # Actualizar solo si se escribió algo nuevo
-                if nuevo_nombre: d["nombre"] = nuevo_nombre
-                if nuevo_apellido: d["apellido"] = nuevo_apellido
-                if nuevo_telefono: d["telefono"] = nuevo_telefono
-                if nueva_direccion: d["direccion"] = nueva_direccion
-                
-                print("Dueño actualizado correctamente.")
-                return
-                
-        print("ID no encontrado.")
-    except ValueError:
-        print("Ingrese un número válido.")
-        
+    cliente = [u for u in database["usuarios"] if u["rol"] == "cliente"]
+    if not cliente: 
+        print("No hay dueños")
+        return
+
+    for i, a in enumerate(cliente, 1): 
+        print(f"{i}. {a['user_name']}")
+    
+    elegido = cliente[int(input("¿Cuál? "))-1]
+    elegido["user_name"] = input(f"Nuevo nombre ({elegido["user_name"]}): ") or elegido["user_name"]
+    elegido["apellido"] = input(f"Nuevo apellido ({elegido["apellido"]}): ") or elegido["apellido"]
+    elegido["telefono"] = input(f"Nuevo telefono ({elegido["telefono"]}): ") or elegido["telefono"]
+    elegido["direccion"] = input(f"Nueva direccion ({elegido["direccion"]}): ") or elegido["direccion"]
+    elegido["password"] = input("Nueva pass: ") or elegido["password"]
+    print("Editado con exito.")
 
 def eliminar_dueño():
-    ver_dueños()
-    if not database["dueños"]: return
+    clientes = [u for u in database["usuarios"] if u["rol"] == "cliente"]
+    if not clientes: 
+        print("No hay dueños registrados")
+        return
+    for i, a in enumerate(clientes, 1): 
+            print(f"{i}. {a['user_name']}")
+    elegido = clientes[int(input("¿Cuál? "))-1]
+    database["usuarios"].remove(elegido)
+    print("Eliminado con exito.")
 
-    try:
-        id_buscar = int(input("\nID del dueño a eliminar: "))
-        encontrado = False
-        
-        for d in database["dueños"]:
-            if d["id"] == id_buscar:
-                database["dueños"].remove(d)
-                encontrado = True
-                break
-        
-        if encontrado:
-            # 🔄 REINDEXAR / REASIGNAR IDs DE FORMA SECUENCIAL
-            for indice, dueño in enumerate(database["dueños"]):
-                dueño["id"] = indice + 1
-                
-            print("✅ Dueño eliminado y lista de IDs reordenada correctamente.")
-        else:
-            print("❌ ID no encontrado.")
-            
-    except ValueError:
-        print("⚠️ Ingrese un número válido.")
+def registrar_administrador():
+    print("=== REGISTRO DE ADMINISTRADOR ===")
+    username = input("Crea un usuario: ")
+    for u in database["usuarios"]:
+        if u["user_name"] == username:
+            print("Ese nombre de usuario ya está en uso. Intenta con otro.")
+            return     
+    password = input("Crea una contraseña: ")
+    database["usuarios"].append({
+        "user_name": username,
+        "password": password,
+        "rol": "admin"})
+    print(f"¡Administrador {username} registrado con éxito!")
 
-# modulo de mascotas
+def ver_administrador():
+    print("\n--- LISTA DE ADMINISTRADORES ---")
+    
+    admins = []
+    for u in database["usuarios"]:
+        if u["rol"] == "admin":
+            admins.append(u)
+    if not admins:
+        print("No hay administradores registrados.")
+        return
+    for a in admins:
+        print(f"Usuario: {a['user_name']} | Rol: {a['rol']}")
+
+def editar_administrador():
+    admins = [u for u in database["usuarios"] if u["rol"] == "admin"]
+    if not admins: 
+        print("No hay administradores")
+        return
+
+    for i, a in enumerate(admins, 1): 
+        print(f"{i}. {a['user_name']}")
+    
+    elegido = admins[int(input("¿Cuál? "))-1]
+    elegido["user_name"] = input(f"Nuevo nombre ({elegido['user_name']}): ") or elegido["user_name"]
+    elegido["password"] = input("Nueva pass: ") or elegido["password"]
+    print("Editado con exito.")
+
+def eliminar_administrador():
+    admins = [u for u in database["usuarios"] if u["rol"] == "admin"]
+    if not admins: 
+        print("No hay administradores")
+        return
+    for i, a in enumerate(admins, 1): 
+            print(f"{i}. {a['user_name']}")
+    elegido = admins[int(input("¿Cuál? "))-1]
+    database["usuarios"].remove(elegido)
+    print("Eliminado con exito.")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def registrar_mascota():
     print("\n--- REGISTRAR NUEVA MASCOTA ---")
