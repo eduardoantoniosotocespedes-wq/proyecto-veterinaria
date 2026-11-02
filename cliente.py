@@ -1,13 +1,14 @@
 from mascotas import ejecutar_menu_mascotas
 def ejecutar_menu_clientes():
     while True:
-        print("\n==============================")
-        print("  MENÚ DE USUARIOS ")
-        print("==============================")
-        print("1. Ver Dueños registrados (Modo lectura)")
-        print("2. Menu para servicios de mascotas")
-        print("3. Cerrar sesión (Volver al menú principal)")
-        
+        print("""\n==============================
+  MENÚ DE DUEÑO 
+==============================
+1. Ver mi perfil
+2. Mis mascotas
+3. Agendar servicio / Cita para mi mascota
+4. Ver historial de mis mascotas
+5. Cerrar sesión""")
         opcion = input("Elige una opción: ")
         
         match opcion:

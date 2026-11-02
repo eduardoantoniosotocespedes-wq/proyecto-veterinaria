@@ -31,23 +31,6 @@ def dueños():
                 print("Opcion invalida, intente denuevo.")
                 print(" ")       
 
-def verificar():
-    print("\n--- INICIO DE SESIÓN ---")
-    user = input("Ingrese su usuario: ")
-    contraseña = input("Ingrese su contraseña: ")
-    
-    # Recorre la lista de dueños buscando coincidencias en los diccionarios
-    for u in database["dueños"]:
-        if u["dueño"] == user and u["contraseña"] == contraseña:
-            print(f"¡Acceso exitoso! Bienvenido, {user}.")
-            dueños()
-            return True
-        
-    print("Error: Usuario o contraseña incorrectos.")
-    return False
-
-
-
 
 def registrar_administrador():
     print("\n--- REGISTRO DE ADMINISTRADOR ---")
