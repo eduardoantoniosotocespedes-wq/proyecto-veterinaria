@@ -1,33 +1,34 @@
-from funciones import iniciar_sesion, registrar_usuario
-from administrador import ejecutar_menu_administradores
-from usuario import ejecutar_menu_usuarios
-
+from base_de_datos import database
+from administradores import ejecutar_menu_super_admin, ejecutar_menu_administradores
+from cliente import ejecutar_menu_clientes
+#creando el ligin de main(), esta funcion la llamare en la parte de main.py
 def main():
     while True:
-        print("\n==================================")
-        print("  VETCARE — SISTEMA VETERINARIO  ")
-        print("==================================")
-        print("1. Iniciar Sesión")
-        print("2. Registrarse")
-        print("3. Salir del Sistema")
-        
-        opcion = input("Elige una opción: ")
-        
-        match opcion:
-            case "1":
-                usuario_actual = iniciar_sesion()
-                if usuario_actual:
-                    if usuario_actual["rol"] == "admin":
-                        ejecutar_menu_administradores()
-                    else:
-                        ejecutar_menu_usuarios()
-            case "2":
-                registrar_usuario()
-            case "3":
-                print("\n¡Gracias por usar VetCare! Hasta luego. ")
+        print("""\n==================================
+  VETCARE — SISTEMA VETERINARIO  
+==================================
+INICIAR SESIÓN""") 
+        user = input("Ingrese su nombre de usuario: ")
+        pas = input("Ingrese su contraseña: ")
+        user_found = None
+        for u in database["usuarios"]:
+            if u["user_name"] == user and u["password"] == pas:
+                user_found = u 
                 break
-            case _:
-                print("Opción inválida. Intenta de nuevo.")
-
-if __name__ == "__main__":
-    main()
+        if user_found:
+            print(f"\nBienvenido {user_found['user_name']} - Rol: {user_found['rol']}")
+            if user_found["rol"] == "superadmin":
+                    ejecutar_menu_super_admin()
+    
+            elif user_found["rol"] == "admin":
+                    ejecutar_menu_administradores()
+    
+            elif user_found["rol"] == "cliente":
+                    ejecutar_menu_clientes()
+            else:
+                print("error de roll, usuario agregado de manera incorrecta comunicarse con dios")
+        else:
+            print("""
+///Usuario o contraseña incorrecta, intente denuevo///
+            """)
+main()
