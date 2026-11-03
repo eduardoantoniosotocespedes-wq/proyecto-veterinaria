@@ -1,4 +1,4 @@
-from mascotas import ejecutar_menu_mascotas
+from funciones import ver_perfil
 def ejecutar_menu_clientes():
     while True:
         print("""\n==============================
@@ -13,11 +13,14 @@ def ejecutar_menu_clientes():
         
         match opcion:
             case "1":
-                from funciones import ver_dueños
-                ver_dueños()
+                ver_perfil()
             case "2":
-                ejecutar_menu_mascotas()
+                pass
             case "3":
+                pass
+            case "4":
+                pass
+            case "5":
                 print("Cerrando sesión de usuario...")
                 break
             case _:
