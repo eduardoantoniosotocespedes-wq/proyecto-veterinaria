@@ -16,6 +16,8 @@ INICIAR SESIÓN""")
                 user_found = u 
                 break
         if user_found:
+            import base_de_datos as bd
+            bd.usuario_actual = user_found["user_name"]
             print(f"\nBienvenido {user_found['user_name']} - Rol: {user_found['rol']}")
             if user_found["rol"] == "superadmin":
                     ejecutar_menu_super_admin()
