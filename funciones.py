@@ -2,7 +2,6 @@ from base_de_datos import database
 import base_de_datos as bd
 from base_de_datos import database
 
-#funciones de superadministrador y algunas de administradores 
 def registrar_dueño():
     print("\n--- REGISTRAR NUEVO DUEÑO ---")
     nombre = input("Nombre: ")
@@ -104,8 +103,6 @@ def eliminar_administrador():
     database["usuarios"].remove(elegido)
     print("Eliminado con exito.")
 
-#funciones para los clientes#muchachas desde aqui son las 
-# funciones que deve de tocar abril, ella que le haga cambios a su gusto
 def ver_perfil():
     print("\n=== MI PERFIL ===")
     # Buscar al usuario actual en la base de datos
@@ -133,11 +130,8 @@ def mis_mascotas():
     else:
         for i, m in enumerate(mis_mascotas, 1):
             print(f"{i}. {m['nombre']} - {m['especie']} ({m['raza']}) - {m['edad']} años")
-#funciones para los clientes#muchachas desde aqui son las 
-# funciones que deve de tocar carolina, ella que le haga cambios a su gusto
 def agendar_servicio():
     print("\n--- AGENDAR SERVICIO ---")
-    # Esta lógica ya está en cliente.py, aquí es un extra por si la llaman directo
     mis_mascotas_list = [m for m in database["mascotas"] if m.get("dueño") == bd.usuario_actual]
     if not mis_mascotas_list:
         print("Primero registra una mascota.")
@@ -145,7 +139,6 @@ def agendar_servicio():
     
     nombre_mascota = mis_mascotas_list[0]["nombre"] # ejemplo simple
     print(f"Agendando para {nombre_mascota}...")
-    # La lógica completa ya está en cliente.py
 
 def ver_historial_mascotas():
     print("\n--- HISTORIAL DE MASCOTAS ---")
