@@ -1,6 +1,7 @@
 from base_de_datos import database
+import base_de_datos as bd
+from base_de_datos import database
 
-#funciones de superadministrador y algunas de administradores 
 def registrar_dueño():
     print("\n--- REGISTRAR NUEVO DUEÑO ---")
     nombre = input("Nombre: ")
@@ -102,20 +103,48 @@ def eliminar_administrador():
     database["usuarios"].remove(elegido)
     print("Eliminado con exito.")
 
-#funciones para los clientes
 def ver_perfil():
     print("\n=== MI PERFIL ===")
-    print(f"""| Nombre: {["user_name"]}
-| Apellido: {["apellido"]} 
-| Telefono: {["telefono"]} 
-| Direccion: {["direccion"]}
+    # Buscar al usuario actual en la base de datos
+    usuario = None
+    for u in database["usuarios"]:
+        if u["user_name"] == bd.usuario_actual:
+            usuario = u
+            break
+    
+    if usuario:
+        print(f"""| Nombre: {usuario.get('user_name','-')}
+| Apellido: {usuario.get('apellido','-')} 
+| Telefono: {usuario.get('telefono','-')} 
+| Direccion: {usuario.get('direccion','-')}
+| Rol: {usuario.get('rol','-')}
 """)
+    else:
+        print("No se pudo encontrar el perfil.")
 
 def mis_mascotas():
-    pass
-
+    print("\n--- MIS MASCOTAS (funcion) ---")
+    mis_mascotas = [m for m in database["mascotas"] if m.get("dueño") == bd.usuario_actual]
+    if not mis_mascotas:
+        print("No tienes mascotas registradas.")
+    else:
+        for i, m in enumerate(mis_mascotas, 1):
+            print(f"{i}. {m['nombre']} - {m['especie']} ({m['raza']}) - {m['edad']} años")
 def agendar_servicio():
-    pass
+    print("\n--- AGENDAR SERVICIO ---")
+    mis_mascotas_list = [m for m in database["mascotas"] if m.get("dueño") == bd.usuario_actual]
+    if not mis_mascotas_list:
+        print("Primero registra una mascota.")
+        return
+    
+    nombre_mascota = mis_mascotas_list[0]["nombre"] # ejemplo simple
+    print(f"Agendando para {nombre_mascota}...")
 
 def ver_historial_mascotas():
-    pass 
+    print("\n--- HISTORIAL DE MASCOTAS ---")
+    mis_citas = [c for c in database["citas"] if c.get("dueño") == bd.usuario_actual]
+    if not mis_citas:
+        print("Sin historial.")
+    else:
+        for c in mis_citas:
+            print(f"{c['fecha']} | {c['mascota']} | {c['servicio']} | {c['estado']}")
