@@ -139,7 +139,6 @@ def mis_mascotas():
     else:
         for i, m in enumerate(mis_mascotas, 1):
             print(f"{i}. {m['nombre']} - {m['especie']} ({m['raza']}) - {m['edad']} años")
-
 def agendar_servicio():
     print("\n--- AGENDAR SERVICIO ---")
     mis_mascotas_list = [m for m in database["mascotas"] if m.get("dueño") == bd.usuario_actual]
