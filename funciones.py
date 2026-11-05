@@ -1,8 +1,10 @@
+from datetime import datetime
 from base_de_datos import database
 import base_de_datos as bd
 from base_de_datos import database
+#funciones para guardado de la base de datos
 
-#funciones de superadministrador y algunas de administradores 
+#funciones para los administradores y superadministrador
 def registrar_dueño():
     print("\n--- REGISTRAR NUEVO DUEÑO ---")
     nombre = input("Nombre: ")
@@ -13,6 +15,7 @@ def registrar_dueño():
     dueño = {"user_name": nombre,"apellido": apellido,"telefono": telefono,"direccion": direccion,"password":pas,"rol":"cliente"}
     
     database["usuarios"].append(dueño)
+    bd.guardar_datos()
     print(f"El dueño ha sido registrado con exito")
 
 def ver_dueños():
@@ -32,13 +35,14 @@ def editar_dueño():
     for i, a in enumerate(cliente, 1): 
         print(f"{i}. {a['user_name']}")
     
-    elegido = cliente[int(input("¿Cuál? "))-1]
+    elegido = cliente[int(input("¿Cuál?: "))-1]
     print("Si no quiere editar un dato, dejelo en blanco")
-    elegido["user_name"] = input(f"Nuevo nombre ({elegido["user_name"]}): ") or elegido["user_name"]
-    elegido["apellido"] = input(f"Nuevo apellido ({elegido["apellido"]}): ") or elegido["apellido"]
-    elegido["telefono"] = input(f"Nuevo telefono ({elegido["telefono"]}): ") or elegido["telefono"]
-    elegido["direccion"] = input(f"Nueva direccion ({elegido["direccion"]}): ") or elegido["direccion"]
-    elegido["password"] = input("Nueva contraseña: ") or elegido["password"]
+    elegido["user_name"] = input(f"Nuevo nombre ({elegido['user_name']}): ") or elegido["user_name"]
+    elegido["apellido"] = input(f"Nuevo apellido ({elegido['apellido']}): ") or elegido["apellido"]
+    elegido["telefono"] = input(f"Nuevo telefono ({elegido['telefono']}): ") or elegido["telefono"]
+    elegido["direccion"] = input(f"Nueva direccion ({elegido['direccion']}): ") or elegido["direccion"]
+    elegido["password"] = input("Nueva contraseña: ") or elegido['password']
+    bd.guardar_datos()
     print("Editado con exito.")
 
 def eliminar_dueño():
@@ -47,9 +51,10 @@ def eliminar_dueño():
         print("No hay dueños registrados")
         return
     for i, a in enumerate(clientes, 1): 
-            print(f"{i}. {a['user_name']}")
+        print(f"{i}. {a['user_name']}")
     elegido = clientes[int(input("¿Cuál? "))-1]
     database["usuarios"].remove(elegido)
+    bd.guardar_datos()
     print("Eliminado con exito.")
 
 def registrar_administrador():
@@ -64,6 +69,7 @@ def registrar_administrador():
         "user_name": username,
         "password": password,
         "rol": "admin"})
+    bd.guardar_datos()
     print(f"¡Administrador {username} registrado con éxito!")
 
 def ver_administrador():
@@ -84,13 +90,12 @@ def editar_administrador():
     if not admins: 
         print("No hay administradores")
         return
-
     for i, a in enumerate(admins, 1): 
-        print(f"{i}. {a['user_name']}")
-    
+        print(f"{i}. {a['user_name']}") 
     elegido = admins[int(input("¿Cuál? "))-1]
     elegido["user_name"] = input(f"Nuevo nombre ({elegido['user_name']}): ") or elegido["user_name"]
     elegido["password"] = input("Nueva pass: ") or elegido["password"]
+    bd.guardar_datos()
     print("Editado con exito.")
 
 def eliminar_administrador():
@@ -99,13 +104,14 @@ def eliminar_administrador():
         print("No hay administradores")
         return
     for i, a in enumerate(admins, 1): 
-            print(f"{i}. {a['user_name']}")
+        print(f"{i}. {a['user_name']}")
     elegido = admins[int(input("¿Cuál? "))-1]
     database["usuarios"].remove(elegido)
+    bd.guardar_datos()
     print("Eliminado con exito.")
 
-#funciones para los clientes#muchachas desde aqui son las 
-# funciones que deve de tocar abril, ella que le haga cambios a su gusto
+#parte de las chicas XDXDXDXDDX
+
 def ver_perfil():
     print("\n=== MI PERFIL ===")
     # Buscar al usuario actual en la base de datos
@@ -133,19 +139,39 @@ def mis_mascotas():
     else:
         for i, m in enumerate(mis_mascotas, 1):
             print(f"{i}. {m['nombre']} - {m['especie']} ({m['raza']}) - {m['edad']} años")
-#funciones para los clientes#muchachas desde aqui son las 
-# funciones que deve de tocar carolina, ella que le haga cambios a su gusto
+
 def agendar_servicio():
     print("\n--- AGENDAR SERVICIO ---")
-    # Esta lógica ya está en cliente.py, aquí es un extra por si la llaman directo
     mis_mascotas_list = [m for m in database["mascotas"] if m.get("dueño") == bd.usuario_actual]
     if not mis_mascotas_list:
         print("Primero registra una mascota.")
         return
     
-    nombre_mascota = mis_mascotas_list[0]["nombre"] # ejemplo simple
+    nombre_mascota = mis_mascotas_list[0]["nombre"] 
     print(f"Agendando para {nombre_mascota}...")
-    # La lógica completa ya está en cliente.py
+
+    while True:
+        fecha_texto = input("¿Qué día? (DD/MM/YYYY) Ejemplo: 10/11/2026: ")
+        hora_texto = input("¿Qué hora? (HH:MM) Ejemplo: 14:30: ")
+
+        try:
+            fecha_cita = datetime.strptime(fecha_texto + " " + hora_texto, "%d/%m/%Y %H:%M")
+        except:
+            print("Fecha o hora inexistente. Ejemplo: no existe el 32/02/2026 ni las 25:99")
+            continue
+
+        if fecha_cita < datetime.now():
+            print("No puedes agendar una cita en el pasado.")
+            continue
+        
+        break
+
+    database["citas"].append({
+        "mascota": nombre_mascota,
+        "dueño": bd.usuario_actual,
+        "fecha": fecha_cita.strftime("%d/%m/%Y %H:%M")})
+    bd.guardar_datos()
+    print(f"¡Cita agendada para {nombre_mascota} el {fecha_cita.strftime('%d/%m/%Y a las %H:%M')}!")
 
 def ver_historial_mascotas():
     print("\n--- HISTORIAL DE MASCOTAS ---")
