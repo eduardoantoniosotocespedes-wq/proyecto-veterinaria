@@ -6,20 +6,53 @@
             "rol": "superadmin"
         },
         {
-            "user_name": "admin1",
-            "password": "12345",
-            "rol": "admin"
-        },
-        {
             "user_name": "eduardo",
             "apellido": "soto",
             "telefono": "64946952",
             "direccion": "villazon",
             "password": "eduardo123",
             "rol": "cliente"
+        },
+        {
+            "user_name": "tokito",
+            "password": "pipipi2",
+            "rol": "admin"
         }
     ],
-    "mascotas": [],
-    "citas": [],
+    "mascotas": [
+        {
+            "nombre": "danger chomozuke",
+            "especie": "soto garcia",
+            "raza": "negro",
+            "edad": "2",
+            "dueño": "eduardo"
+        },
+        {
+            "nombre": "oliver avastiko",
+            "especie": "gato",
+            "raza": "vaca",
+            "edad": "1",
+            "dueño": "eduardo"
+        }
+    ],
+    "citas": [
+        {
+            "mascota": "danger chomozuke",
+            "dueño": "eduardo",
+            "fecha": "21/03/2027 10:00"
+        },
+        {
+            "mascota": "danger chomozuke",
+            "dueño": "eduardo",
+            "fecha": "21/03/2027 10:00"
+        },
+        {
+            "mascota": "oliver avastiko",
+            "dueño": "eduardo",
+            "fecha": "18/05/2027 09:00",
+            "servicio": "corte",
+            "estado": "Cancelada"
+        }
+    ],
     "historial": []
 }
