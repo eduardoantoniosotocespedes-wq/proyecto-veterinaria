@@ -110,7 +110,7 @@ def eliminar_administrador():
     bd.guardar_datos()
     print("Eliminado con exito.")
 
-#parte de las chicas XDXDXDXDDX
+#parte de los clientes/dueños
 
 def ver_perfil():
     print("\n=== MI PERFIL ===")
@@ -132,13 +132,72 @@ def ver_perfil():
         print("No se pudo encontrar el perfil.")
 
 def mis_mascotas():
-    print("\n--- MIS MASCOTAS (funcion) ---")
-    mis_mascotas = [m for m in database["mascotas"] if m.get("dueño") == bd.usuario_actual]
-    if not mis_mascotas:
+    print("\n--- MIS MASCOTAS ---")
+    lista = [m for m in database["mascotas"] if m.get("dueño") == bd.usuario_actual]
+    if not lista:
         print("No tienes mascotas registradas.")
     else:
-        for i, m in enumerate(mis_mascotas, 1):
+        for i, m in enumerate(lista, 1):
             print(f"{i}. {m['nombre']} - {m['especie']} ({m['raza']}) - {m['edad']} años")
+    
+    reg = input("\n¿Quieres registrar una nueva mascota? (s/n): ").lower().strip()
+    if reg == 's':
+        nombre = input("Nombre de la mascota: ").strip()
+        especie = input("Especie (perro/gato/otro): ").strip()
+        raza = input("Raza: ").strip()
+        edad = input("Edad: ").strip()
+
+        ya_existe = False
+        for m in database["mascotas"]:
+            if m.get("dueño") == bd.usuario_actual and m.get("nombre", "").lower().strip() == nombre.lower():
+                ya_existe = True
+                break
+        
+        if ya_existe:
+            print(f"Ya tienes registrada una mascota llamada '{nombre}'. No puedes registrarla dos veces.")
+            return 
+
+        database["mascotas"].append({"nombre": nombre, "especie": especie, "raza": raza, "edad": edad, "dueño": bd.usuario_actual})
+        bd.guardar_datos()
+        print(f"¡{nombre} registrada con éxito!")
+
+def eliminar_mascota():
+    print("\n--- ELIMINAR MASCOTA ---")
+    lista = [m for m in database["mascotas"] if m.get("dueño") == bd.usuario_actual]
+    
+    if not lista:
+        print("No tienes mascotas para eliminar.")
+        return
+
+    for i, m in enumerate(lista, 1):
+        print(f"{i}. {m['nombre']} - {m['especie']} ({m['raza']})")
+
+    try:
+        opcion = int(input("\n¿Qué número quieres eliminar? (0 para cancelar): ").strip())
+    except:
+        print("Tienes que poner un número.")
+        return
+
+    if opcion == 0:
+        print("Cancelado.")
+        return
+
+    if opcion < 1 or opcion > len(lista):
+        print("Ese número no existe.")
+        return
+
+    mascota_a_borrar = lista[opcion - 1]
+    
+    confirmar = input(f"¿Seguro que quieres eliminar a {mascota_a_borrar['nombre']}? (s/n): ").lower().strip()
+    if confirmar != 's':
+        print("No se eliminó nada.")
+        return
+
+    # La borramos de la base de datos general
+    database["mascotas"].remove(mascota_a_borrar)
+    bd.guardar_datos()
+    print(f"¡{mascota_a_borrar['nombre']} eliminada con éxito!")
+
 def agendar_servicio():
     print("\n--- AGENDAR SERVICIO ---")
     mis_mascotas_list = [m for m in database["mascotas"] if m.get("dueño") == bd.usuario_actual]
@@ -149,6 +208,7 @@ def agendar_servicio():
     nombre_mascota = mis_mascotas_list[0]["nombre"] 
     print(f"Agendando para {nombre_mascota}...")
 
+    # Pedimos hasta que ponga una fecha buena
     while True:
         fecha_texto = input("¿Qué día? (DD/MM/YYYY) Ejemplo: 10/11/2026: ")
         hora_texto = input("¿Qué hora? (HH:MM) Ejemplo: 14:30: ")
@@ -156,7 +216,7 @@ def agendar_servicio():
         try:
             fecha_cita = datetime.strptime(fecha_texto + " " + hora_texto, "%d/%m/%Y %H:%M")
         except:
-            print("Fecha o hora inexistente. Ejemplo: no existe el 32/02/2026 ni las 25:99")
+            print("Fecha o hora inexistente. Intente denuevo")
             continue
 
         if fecha_cita < datetime.now():
@@ -168,7 +228,8 @@ def agendar_servicio():
     database["citas"].append({
         "mascota": nombre_mascota,
         "dueño": bd.usuario_actual,
-        "fecha": fecha_cita.strftime("%d/%m/%Y %H:%M")})
+        "fecha": fecha_cita.strftime("%d/%m/%Y %H:%M")
+    })
     bd.guardar_datos()
     print(f"¡Cita agendada para {nombre_mascota} el {fecha_cita.strftime('%d/%m/%Y a las %H:%M')}!")
 
