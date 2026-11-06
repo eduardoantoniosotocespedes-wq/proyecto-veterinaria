@@ -205,8 +205,24 @@ def agendar_servicio():
         print("Primero registra una mascota.")
         return
     
-    nombre_mascota = mis_mascotas_list[0]["nombre"] 
+    print("\n¿Para qué mascota quieres agendar?")
+    for i in range(len(mis_mascotas_list)):
+        print(f"{i+1}. {mis_mascotas_list[i]['nombre']}")
+
+    while True:
+        opcion = input("Elige el número de tu mascota: ").strip()
+        if opcion.isdigit():
+            opcion = int(opcion)
+            if 1 <= opcion <= len(mis_mascotas_list):
+                nombre_mascota = mis_mascotas_list[opcion-1]["nombre"]
+                break
+            else:
+                print("Ese número no existe, intenta de nuevo.")
+        else:
+            print("Solo pon el número, por ejemplo: 1")
+
     print(f"Agendando para {nombre_mascota}...")
+
 
     # Pedimos hasta que ponga una fecha buena
     while True:
@@ -224,20 +240,57 @@ def agendar_servicio():
             continue
         
         break
-
+    servicio = input("¿Que servicio desea?: Baño /Corte /Veterinario: ").strip()
     database["citas"].append({
         "mascota": nombre_mascota,
         "dueño": bd.usuario_actual,
-        "fecha": fecha_cita.strftime("%d/%m/%Y %H:%M")
-    })
+        "fecha": fecha_cita.strftime("%d/%m/%Y %H:%M"),
+        "servicio": servicio,
+        "estado": "pendiente"
+        })
     bd.guardar_datos()
     print(f"¡Cita agendada para {nombre_mascota} el {fecha_cita.strftime('%d/%m/%Y a las %H:%M')}!")
 
 def ver_historial_mascotas():
-    print("\n--- HISTORIAL DE MASCOTAS ---")
+    print("\n--- HISTORIAL DE MIS MASCOTAS ---")
     mis_citas = [c for c in database["citas"] if c.get("dueño") == bd.usuario_actual]
+
     if not mis_citas:
-        print("Sin historial.")
+        print("Aún no tienes historial.")
+        return
+
+    for c in mis_citas:
+        print(f"{c.get('fecha')} | {c.get('mascota')} | {c.get('servicio')} | Estado: {c.get('estado')}")
+        
+def cancelar_cita():
+    print("\n--- CANCELAR CITA ---")
+    mis_citas = [c for c in database["citas"] if c.get("dueño") == bd.usuario_actual and c.get("estado") == "pendiente"]
+
+    if not mis_citas:
+        print("No tienes citas pendientes para cancelar.")
+        return
+
+    print("\n¿Cúal cita quieres cancelar?")
+    for i in range(len(mis_citas)):
+        print(f"{i+1}. {mis_citas[i].get('fecha')} | {mis_citas[i].get('mascota')} | {mis_citas[i].get('servicio')}")
+
+    while True:
+        opcion = input("Elige el número de la cita: ").strip()
+        if opcion.isdigit():
+            opcion = int(opcion)
+            if 1 <= opcion <= len(mis_citas):
+                cita_elegida = mis_citas[opcion-1]
+                break
+            else:
+                print("Ese número no existe, intenta de nuevo.")
+        else:
+            print("Solo pon el número, por ejemplo: 1")
+
+    confirmar = input(f"¿Seguro que quieres cancelar la cita de {cita_elegida.get('mascota')} el {cita_elegida.get('fecha')}? (SI/NO): ").strip().upper()
+
+    if confirmar == "SI":
+        cita_elegida["estado"] = "Cancelada"
+        bd.guardar_datos()
+        print("¡Cita cancelada!")
     else:
-        for c in mis_citas:
-            print(f"{c['fecha']} | {c['mascota']} | {c['servicio']} | {c['estado']}")
+        print("No se canceló nada.")
